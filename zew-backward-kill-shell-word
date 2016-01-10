@@ -23,7 +23,10 @@ integer start end_of_word end_of_cut=$CURSOR
 
 # Standard kill-widget behaviour
 autoload is-at-least
-[ ! is-at-least 5.2 ] && zle -f 'kill'
+if is-at-least 5.2; then
+    zle -f 'kill'
+fi
+
 if [[ $LASTWIDGET == *'kill'* ]]; then
   CUTBUFFER=${BUFFER[start,end_of_cut]}$CUTBUFFER
 else
