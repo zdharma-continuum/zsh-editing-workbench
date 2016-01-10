@@ -1,5 +1,6 @@
 #
-# Copyright (c) 2016  Daniel Shahaf
+# Copyright (c) 2016 Daniel Shahaf
+# Modifications Copyright © 2016 Sebastian Gniazdowski
 #
 
 local MATCH; integer MBEGIN MEND
