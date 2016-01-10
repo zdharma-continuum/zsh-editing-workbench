@@ -1,0 +1,53 @@
+# Displays help on Zew provided actions. Lines are 72 characters long
+
+autoload colors
+colors
+
+local h1="$fg_bold[magenta]"
+local h2="$fg_bold[green]"
+local h3="$fg_bold[yellow]"
+local rst="$reset_color"
+
+less <<<"
+${h1}Key Bindings${rst}
+
+Zew provides organized key bindings for various command line
+editing features, and also provides some of the features (not
+existing in all Zsh versions, or having limitations or bugs).
+The key bindings are:
+
+1. ${h2}Alt-w${rst}  - delete a ${h3}shell word${rst} (what's a shell word is explained in
+            following section)
+2. ${h2}Alt-t${rst}  - transpose (swap) ${h3}shell words${rst}
+3. ${h2}Alt-m${rst}  - copy previous ${h3}shell word${rst}
+4. ${h2}Ctrl-W${rst} - delete word according to configured ${h3}word style${rst} (what's the
+            style is explained in following section)
+5. ${h2}Alt-r${rst}  - transpose (swap) words according to configured ${h3}word style${rst}
+            (cursor needs to be placed on beginning of word to swap)
+6. ${h2}Alt-/${rst}  - complete ${h3}some word${rst} from history (explained
+            in next section}
+
+
+${h1}Definitions${rst}
+
+A ${h3}shell word${rst} is a text that Zsh would see as single segment. For example
+\$(( i + 1 )) is a single shell word.
+
+A ${h3}word style${rst} defines a way Zsh recognizes segments (words) of text in
+commands that want to use the style information. The style can be
+configured in zew.conf to be one of:
+
+- bash       words are built up of alphanumeric characters only
+- normal     as in normal shell operation: word characters are
+             alphanumeric characters plus any characters present in the
+             string given by the parameter \$WORDCHARS
+- shell      words are complete shell command arguments, possibly
+             including complete quoted strings, or any tokens special to
+             the shell
+- whitespace words are any set of characters delimited by whitespace
+- default    restore the default settings; this is the same as 'normal'
+             with default \$WORDCHARS
+
+${h3}Some word${rst} is in general a sophisticated word, but not a shell word,
+because of bugs in history word completion.
+"

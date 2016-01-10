@@ -29,7 +29,7 @@ done
 
 . "$CONFIG_DIR"/zew.conf
 
-autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-style
+autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-style zew
 
 # Below are configured:
 # 1. Alt-w to kill a shell word
