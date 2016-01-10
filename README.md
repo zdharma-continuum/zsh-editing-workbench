@@ -3,7 +3,12 @@
 # Zsh Editing Workbench
 
 Zsh Editing Workbench in action:
+
 ![zew](http://imageshack.com/a/img911/7091/wJKRAk.gif)
+
+Help function:
+
+![zew help](http://imagizer.imageshack.us/a/img903/3292/oDwtY9.gif)
 
 ## Installation With Zgen
 
