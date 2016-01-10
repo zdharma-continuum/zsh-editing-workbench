@@ -14,10 +14,5 @@ The config files will be available in `~/.config/zew`.
 Add `antigen bundle psprint/zsh-editing-workbench` to `.zshrc`. There also
 should be `antigen apply`. The config files will be in `~/.config/znt`.
 
-## Single File Manual Installation
-
-Running script `doc/generate_single_file` will create single-file version of `ZEW`.
-It can be sourced from `.zshrc`. Don't forget about configuration files (copy them to `~/.config/zew`).
-
 ## Introduction
 
