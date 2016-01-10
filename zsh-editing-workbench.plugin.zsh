@@ -50,10 +50,12 @@ bindkey '^[t' zew-transpose-shell-words
 # Alt-m to copy previous shell word
 bindkey "^[m" copy-prev-shell-word
 
-select-word-style "$zew_word_style"
+# Select chosen word style
 [[ "$zew_word_style" = "bash" || "$zew_word_style" = "normal" ||
         "$zew_word_style" = "shell" || "$zew_word_style" = "bash" || 
         "$zew_word_style" = "whitespace" || "$zew_word_style" = "default" ]] || zew_word_style="bash"
+
+select-word-style "$zew_word_style"
 
 # Ctrl-W to kill word according to configured style
 bindkey "^W" backward-kill-word
