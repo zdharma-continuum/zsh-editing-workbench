@@ -1,0 +1,34 @@
+#
+# Copyright (c) 2016  Daniel Shahaf
+#
+
+local MATCH; integer MBEGIN MEND
+integer start end_of_word end_of_cut=$CURSOR
+
+# Walk backwards to an end-of-word
+[[ $LBUFFER =~ '[[:space:]]*$' ]] || : # sets $MATCH
+(( end_of_word = CURSOR - $#MATCH ))
+
+# Find the start of the shell word ending at $BUFFER[end_of_word]
+() {
+  local l="$PREBUFFER$LBUFFER[1,end_of_word]"
+  local -a a
+  if [[ -o interactive_comments ]]; then
+    a=( ${(zZ+c+)l} )
+  else
+    a=( ${(z)l} )
+  fi
+  (( start = end_of_word - ${#a[-1]} + 1 ))
+}
+
+# Standard kill-widget behaviour
+autoload is-at-least
+[ ! is-at-least 5.2 ] && zle -f 'kill'
+if [[ $LASTWIDGET == *'kill'* ]]; then
+  CUTBUFFER=${BUFFER[start,end_of_cut]}$CUTBUFFER
+else
+  zle copy-region-as-kill -- "${BUFFER[start,end_of_cut]}"
+fi
+
+# Delete the last shell word from $LBUFFER
+LBUFFER[start,end_of_cut]=""
