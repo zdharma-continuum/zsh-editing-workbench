@@ -32,6 +32,7 @@ The key bindings are:
             (cursor needs to be placed on beginning of word to swap)
 8. ${h2}Alt-/${rst}  - complete ${h3}some word${rst} from history (explained
             in next section}
+9. ${h2}Ctrl-_${rst} - undo
 
 
 ${h1}Definitions${rst}

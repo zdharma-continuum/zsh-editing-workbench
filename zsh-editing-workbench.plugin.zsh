@@ -40,6 +40,7 @@ autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-styl
 # 6. Ctrl-W to kill word according to configured style
 # 7. Alt-r to transpose words according to configured style
 # 8. Alt-/ to complete word from history
+# 9. Undo
 
 # 1. Alt-w to kill a shell word
 zle -N zew-backward-kill-shell-word
@@ -81,4 +82,7 @@ bindkey "^[/" _history-complete-older
 zstyle ':completion:history-words:*' remove-all-dups true
 zstyle ':completion:history-words:*' sort true
 zstyle ':completion:*' range 50000:10000 # TODO: from configuration
+
+# 9. Undo
+bindkey "^_" undo
 
