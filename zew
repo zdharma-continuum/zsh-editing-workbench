@@ -19,12 +19,18 @@ The key bindings are:
 1. ${h2}Alt-w${rst}  - delete a ${h3}shell word${rst} (what's a shell word is explained in
             following section)
 2. ${h2}Alt-t${rst}  - transpose (swap) ${h3}shell words${rst}
-3. ${h2}Alt-m${rst}  - copy previous ${h3}shell word${rst}
-4. ${h2}Ctrl-W${rst} - delete word according to configured ${h3}word style${rst} (what's the
+3. ${h2}Alt-m${rst}  - copy previous ${h3}shell word${rst}, or word before that, etc. when
+            used multiple times
+4. ${h2}Alt-M${rst}  - just copy previous ${h3}shell word${rst} without iterating to
+            previous ones
+5. ${h2}Alt-.${rst}  - copy last ${h3}shell word${rst} from previous line, or line before
+            that, etc. when used multiple times; can be combined with
+            ${h2}Alt-m${rst}
+6. ${h2}Ctrl-W${rst} - delete word according to configured ${h3}word style${rst} (what's the
             style is explained in following section)
-5. ${h2}Alt-r${rst}  - transpose (swap) words according to configured ${h3}word style${rst}
+7. ${h2}Alt-r${rst}  - transpose (swap) words according to configured ${h3}word style${rst}
             (cursor needs to be placed on beginning of word to swap)
-6. ${h2}Alt-/${rst}  - complete ${h3}some word${rst} from history (explained
+8. ${h2}Alt-/${rst}  - complete ${h3}some word${rst} from history (explained
             in next section}
 
 

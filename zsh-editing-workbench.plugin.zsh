@@ -34,10 +34,12 @@ autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-styl
 # Below are configured:
 # 1. Alt-w to kill a shell word
 # 2. Alt-t to transpose shell words
-# 3. Alt-m to copy previous shell word
-# 4. Ctrl-W to kill word according to configured style
-# 5. Alt-r to transpose words according to configured style
-# 6. Alt-/ to complete word from history
+# 3. Alt-m to copy previous shell word, or word before that, etc.
+# 4. Alt-M to just copy previous shell word
+# 5. Alt-. to copy last shell word from previous line, or line before that
+# 6. Ctrl-W to kill word according to configured style
+# 7. Alt-r to transpose words according to configured style
+# 8. Alt-/ to complete word from history
 
 # Alt-w to kill a shell word
 zle -N zew-backward-kill-shell-word
@@ -47,8 +49,16 @@ bindkey '^[w' zew-backward-kill-shell-word
 zle -N zew-transpose-shell-words
 bindkey '^[t' zew-transpose-shell-words
 
-# Alt-m to copy previous shell word
-bindkey "^[m" copy-prev-shell-word
+# Alt-m to copy previous shell word, or word before that, etc.
+autoload -Uz copy-earlier-word
+zle -N copy-earlier-word
+bindkey "^[m" copy-earlier-word
+
+# Alt-M to just copy previous shell word
+bindkey "^[M" copy-prev-shell-word
+
+# Alt-. to copy last shell word from previous line, or line before that
+bindkey "^[." insert-last-word
 
 # Select chosen word style
 [[ "$zew_word_style" = "bash" || "$zew_word_style" = "normal" ||
