@@ -41,23 +41,23 @@ autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-styl
 # 7. Alt-r to transpose words according to configured style
 # 8. Alt-/ to complete word from history
 
-# Alt-w to kill a shell word
+# 1. Alt-w to kill a shell word
 zle -N zew-backward-kill-shell-word
 bindkey '^[w' zew-backward-kill-shell-word
 
-# Alt-t to transpose shell words
+# 2. Alt-t to transpose shell words
 zle -N zew-transpose-shell-words
 bindkey '^[t' zew-transpose-shell-words
 
-# Alt-m to copy previous shell word, or word before that, etc.
+# 3. Alt-m to copy previous shell word, or word before that, etc.
 autoload -Uz copy-earlier-word
 zle -N copy-earlier-word
 bindkey "^[m" copy-earlier-word
 
-# Alt-M to just copy previous shell word
+# 4. Alt-M to just copy previous shell word
 bindkey "^[M" copy-prev-shell-word
 
-# Alt-. to copy last shell word from previous line, or line before that
+# 5. Alt-. to copy last shell word from previous line, or line before that
 bindkey "^[." insert-last-word
 
 # Select chosen word style
@@ -67,15 +67,15 @@ bindkey "^[." insert-last-word
 
 select-word-style "$zew_word_style"
 
-# Ctrl-W to kill word according to configured style
+# 6. Ctrl-W to kill word according to configured style
 bindkey "^W" backward-kill-word
 
-# Alt-r to transpose words according to configured style (cursor needs to be placed on beginning of word to swap)
+# 7. Alt-r to transpose words according to configured style (cursor needs to be placed on beginning of word to swap)
 autoload transpose-words-match
 zle -N transpose-words-match
 bindkey "^[r" transpose-words-match
 
-# Alt-/ to complete word from history
+# 8. Alt-/ to complete word from history
 setopt hist_lex_words
 bindkey "^[/" _history-complete-older
 zstyle ':completion:history-words:*' remove-all-dups true
