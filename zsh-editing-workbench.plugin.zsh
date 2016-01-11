@@ -69,5 +69,6 @@ bindkey "^[r" transpose-words-match
 setopt hist_lex_words
 bindkey "^[/" _history-complete-older
 zstyle ':completion:history-words:*' remove-all-dups true
+zstyle ':completion:history-words:*' sort true
 zstyle ':completion:*' range 50000:10000 # TODO: from configuration
 
