@@ -22,7 +22,7 @@ bufarr=( "${(Z+n+)buf}" )
 
 integer size="$#bufarr"
 integer char_count=0
-integer selected_shell_word=0
+integer selected_shell_word=-1
 
 # (Z) handles spaces nicely, but we need them for the user
 for (( i=1; i<=size; i++ )); do
@@ -45,12 +45,18 @@ for (( i=1; i<=size; i++ )); do
     # function doing nothing. This shoudln't happen
     [ -z "$MATCH" ] && return 0;
 
+    #
     # Count how many characters we processed,
     # to know which shell word is active
-    char_count=char_count+"$#spaces[i]"+"$#shell_word"
+    #
 
-    # Detect which shell word is active
-    [[ "$selected_shell_word" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i
+    # Spaces point to previous shell word
+    char_count=char_count+"$#spaces[i]"
+    [[ "$selected_shell_word" -eq -1 && "$char_count" -gt "$CURSOR" ]] && selected_shell_word=i-1
+
+    # Actual characters point to current shell word
+    char_count=char_count+"$#shell_word"
+    [[ "$selected_shell_word" -eq -1 && "$char_count" -gt "$CURSOR" ]] && selected_shell_word=i
 done
 
 # What's left in $buf can be only white spaces
@@ -59,11 +65,12 @@ char_count=char_count+"$#spaces[i]"
 
 # Detect which shell word is active
 # This one is for trailing white spaces
-[[ "$selected_shell_word" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i-1
+[[ "$selected_shell_word" -eq -1 && "$char_count" -gt "$CURSOR" ]] && selected_shell_word=i-1
 
-# No active shell word found (shouldn't happen)
-# or it's the first shell word? Return
-[[ "$selected_shell_word" -eq "0" || "$selected_shell_word" -eq "1" ]] && return 0
+# No active shell word found (shouldn't happen) (-1)
+# or it's the first shell word (1), or word before first
+# shell word (0)? Return
+[ "$selected_shell_word" -le 1 ] && return 0
 
 # Swap shell words
 local tmp="$bufarr[selected_shell_word]"
