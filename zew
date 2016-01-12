@@ -5,42 +5,46 @@ colors
 
 local h1="$fg_bold[magenta]"
 local h2="$fg_bold[green]"
-local h3="$fg_bold[yellow]"
+local h3="$fg_bold[blue]"
+local h4="$fg_bold[yellow]"
 local rst="$reset_color"
 
 less <<<"
 ${h1}Key Bindings${rst}
 
-Zew provides organized key bindings for various command line
-editing features, and also provides some of the features (not
-existing in all Zsh versions, or having limitations or bugs).
-The key bindings are:
+Zew provides organized key bindings for various command line editing
+features, and also provides some of the features (not existing in all
+Zsh versions, or having limitations or bugs). Original, long present
+features are also used to make user not depart from mainstream Zsh.
 
-1. ${h2}Alt-w${rst}  - delete a ${h3}shell word${rst} (what's a shell word is explained in
+The key bindings are below. Original features are marked by
+blue color set on the key shortcut:
+
+1. ${h2}Alt-w${rst}  - delete a ${h4}shell word${rst} (what's a shell word is explained in
             following section)
-2. ${h2}Alt-t${rst}  - transpose (swap) ${h3}shell words${rst}
-3. ${h2}Alt-m${rst}  - copy previous ${h3}shell word${rst}, or word before that, etc. when
+2. ${h2}Alt-t${rst}  - transpose (swap) ${h4}shell words${rst}
+3. ${h3}Alt-m${rst}  - copy previous ${h4}shell word${rst}, or word before that, etc. when
             used multiple times
-4. ${h2}Alt-M${rst}  - just copy previous ${h3}shell word${rst} without iterating to
+4. ${h3}Alt-M${rst}  - just copy previous ${h4}shell word${rst} without iterating to
             previous ones
-5. ${h2}Alt-.${rst}  - copy last ${h3}shell word${rst} from previous line, or line before
+5. ${h3}Alt-.${rst}  - copy last ${h4}shell word${rst} from previous line, or line before
             that, etc. when used multiple times; can be combined with
-            ${h2}Alt-m${rst}
-6. ${h2}Ctrl-W${rst} - delete word according to configured ${h3}word style${rst} (what's the
+            ${h3}Alt-m${rst}
+6. ${h3}Ctrl-W${rst} - delete word according to configured ${h4}word style${rst} (what's the
             style is explained in following section)
-7. ${h2}Alt-r${rst}  - transpose (swap) words according to configured ${h3}word style${rst}
+7. ${h3}Alt-r${rst}  - transpose (swap) words according to configured ${h4}word style${rst}
             (cursor needs to be placed on beginning of word to swap)
-8. ${h2}Alt-/${rst}  - complete ${h3}some word${rst} from history (explained
+8. ${h3}Alt-/${rst}  - complete ${h4}some word${rst} from history (explained
             in next section}
-9. ${h2}Ctrl-_${rst} - undo
+9. ${h3}Ctrl-_${rst} - undo
 
 
 ${h1}Definitions${rst}
 
-A ${h3}shell word${rst} is a text that Zsh would see as single segment. For example
+A ${h4}shell word${rst} is a text that Zsh would see as single segment. For example
 \$(( i + 1 )) is a single shell word.
 
-A ${h3}word style${rst} defines a way Zsh recognizes segments (words) of text in
+A ${h4}word style${rst} defines a way Zsh recognizes segments (words) of text in
 commands that want to use the style information. The style can be
 configured in zew.conf to be one of:
 
@@ -55,6 +59,6 @@ configured in zew.conf to be one of:
 - default    restore the default settings; this is the same as 'normal'
              with default \$WORDCHARS
 
-${h3}Some word${rst} is in general a sophisticated word, but not a shell word,
+${h4}Some word${rst} is in general a sophisticated word, but not a shell word,
 because of bugs in history word completion.
 "
