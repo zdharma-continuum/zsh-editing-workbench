@@ -1,4 +1,4 @@
-# Transpose shell-words, i.e. parts of lines obtained by (z) flag, i.e.
+# Transpose shell-words, i.e. parts of lines obtained by (Z) flag, i.e.
 # as if zsh parsed the line.
 #
 # Code to activate the functionality with binding to Alt-t:
@@ -9,7 +9,7 @@
 local curcontext=":zle:$WIDGET"
 local MATCH MBEGIN MEND i
 
-# Will remember white spaces before each segment
+# Will remember white spaces before each shell word
 typeset -a spaces
 spaces=()
 
@@ -18,113 +18,64 @@ local buf="$BUFFER"
 
 # Split the buffer
 typeset -a bufarr
-bufarr=( "${(z)buf}" )
-
-# Output array, needed to skip (z)-generated semicolons
-typeset -a outarr
-outarr=()
+bufarr=( "${(Z+n+)buf}" )
 
 integer size="$#bufarr"
 integer char_count=0
-integer selected_segment=0
-local newbuf newspaces
+integer selected_shell_word=0
 
-# (z) handles spaces nicely, but we need them for the user
+# (Z) handles spaces nicely, but we need them for the user
 for (( i=1; i<=size; i++ )); do
-    local segment="$bufarr[i]"
+    local shell_word="$bufarr[i]"
 
     # In general, $buf can start with white spaces
-    # We will not search for them, but instead segment's
-    # leading character, negated. This is an ambition
-    # to completely avoid character classes
+    # We will not search for them, but instead for
+    # leading character of current shell word,
+    # negated. This is an ambition to completely
+    # avoid character classes
 
-    newbuf="${buf##(#m)[^$segment[1]]#}"
-    newspaces="$MATCH"
+    # First remove and remember spaces
+    buf="${buf##(#m)[^$shell_word[1]]#}"
+    spaces[i]="$MATCH"
+    MATCH=""
+    # Second, remove (Z)-generated shell word
+    buf="${buf#(#m)$shell_word}"
 
-    # Is this a last segment?
-    if [ "$i" -lt "$size" ]; then
-        # If there was (z)-added ";" then $newspaces will contain char $nextsegment[1]
-        # because the "${buf##..}" above will move onward in $buf
-        # Also, correct detection of spaces implies that $newbuf[1] = $segment[1]
-        local nextsegment="$bufarr[i+1]"
-        if [[ ("${newspaces/$nextsegment[1]/}" = "$newspaces")
-                && "$newbuf[1]" = "$segment[1]" ]]; then
-            # Normal situation, white space before $segment
-            spaces[i]="$newspaces"
-            outarr[i]="$segment"
-            buf="$newbuf"
-            MATCH=""
-            buf="${buf#(#m)$segment}"
+    # If shell word not found, return from the
+    # function doing nothing. This shoudln't happen
+    [ -z "$MATCH" ] && return 0;
 
-            # If segment not found, return from the function doing nothing
-            # This shoudln't happen
-            [ -z "$MATCH" ] && return 0;
+    # Count how many characters we processed,
+    # to know which shell word is active
+    char_count=char_count+"$#spaces[i]"+"$#shell_word"
 
-            char_count=char_count+"$#newspaces"+"$#segment"
-        else
-            # Special situation: we searched for [^;], but ";" was added
-            # by (z) flag, and we ended matching not only white spaces
-            # but also something from the next segment
-            # Or, if (z)-added ";" was one of last ones, then $segment[1]
-            # != $newbuf[1]
-            #
-            # This not-actual segment should be ignored
-            spaces[i]=""
-            outarr[i]=""
-        fi
-    else
-        # Last segment
-        if [[ "$newbuf[1]" = "$segment[1]" ]]; then
-            spaces[i]="$newspaces"
-            outarr[i]="$segment"
-
-            buf="$newbuf"
-            MATCH=""
-            buf="${buf#(#m)$segment}"
-
-            # If segment not found, return from the function doing nothing
-            # This shoudln't happen
-            [ -z "$MATCH" ] && return 0
-
-            char_count=char_count+"$#segment"+"$#newspaces"
-        else
-            # This handles multiple (z)-added ";" at the end (i.e. newlines)
-            outarr[i]=""
-            spaces[i]="$newspaces"
-        fi
-    fi
-
-    # Detect which segment is active
-    [[ "$selected_segment" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_segment=i
+    # Detect which shell word is active
+    [[ "$selected_shell_word" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i
 done
 
 # What's left in $buf can be only white spaces
 spaces[i]="$buf"
-char_count=char_count+"$#buf"
+char_count=char_count+"$#spaces[i]"
 
-# Detect which segment is active - this takes into account possible trailing white spaces
-[[ "$selected_segment" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_segment=i-1
+# Detect which shell word is active
+# This one is for trailing white spaces
+[[ "$selected_shell_word" -eq 0 && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i-1
 
-# No active segment found (shouldn't happen)? Return
-[ "$selected_segment" -eq "0" ] && return 0
+# No active shell word found (shouldn't happen)
+# or it's the first shell word? Return
+[[ "$selected_shell_word" -eq "0" || "$selected_shell_word" -eq "1" ]] && return 0
 
-# First find actual previous segment
-integer prev_segment=0
-for (( i=selected_segment-1; i>0; i-- )) [ -n "$outarr[i]" ] && { prev_segment=i; break }
-# No actual previous segment? Return doing nothing
-[ "$prev_segment" = "0" ] && return 0
-
-# Swap segments
-local tmp="$outarr[selected_segment]"
-outarr[selected_segment]="$outarr[prev_segment]"
-outarr[prev_segment]="$tmp"
+# Swap shell words
+local tmp="$bufarr[selected_shell_word]"
+bufarr[selected_shell_word]="$bufarr[selected_shell_word-1]"
+bufarr[selected_shell_word-1]="$tmp"
 
 # Build BUFFER
 integer newcursor
 BUFFER=""
 for (( i=1; i<=size; i++ )); do
-    BUFFER+="$spaces[i]$outarr[i]"
-    [ "$i" = "$selected_segment" ] && newcursor="$#BUFFER"
+    BUFFER+="$spaces[i]$bufarr[i]"
+    [ "$i" = "$selected_shell_word" ] && newcursor="$#BUFFER"
 done
 CURSOR="$newcursor"
 
