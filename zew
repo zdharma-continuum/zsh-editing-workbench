@@ -9,6 +9,9 @@ local h3="$fg_bold[blue]"
 local h4="$fg_bold[yellow]"
 local rst="$reset_color"
 
+local LESS_bkp="$LESS"
+LESS="-iRX"
+
 less <<<"
 ${h1}Key Bindings${rst}
 
@@ -62,3 +65,6 @@ configured in zew.conf to be one of:
 ${h4}Some word${rst} is in general a sophisticated word, but not a shell word,
 because of bugs in history word completion.
 "
+
+LESS="$LESS_bkp"
+
