@@ -29,7 +29,7 @@ done
 
 . "$CONFIG_DIR"/zew.conf
 
-autoload zew-backward-kill-shell-word zew-transpose-shell-words select-word-style zew
+autoload -Uz zew-backward-kill-shell-word zew-transpose-shell-words select-word-style zew
 
 # Below are configured:
 # 1. Alt-w to kill a shell word
@@ -72,7 +72,7 @@ select-word-style "$zew_word_style"
 bindkey "^W" backward-kill-word
 
 # 7. Alt-r to transpose words according to configured style (cursor needs to be placed on beginning of word to swap)
-autoload transpose-words-match
+autoload -Uz transpose-words-match
 zle -N transpose-words-match
 bindkey "^[r" transpose-words-match
 
