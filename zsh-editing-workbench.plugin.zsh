@@ -94,3 +94,6 @@ fi
 # 10. Undo
 bindkey "^_" undo
 
+#autoload widen_for_history
+#zle -N widen_for_history
+#zstyle ':completion:*' completer widen_for_history _complete

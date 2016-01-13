@@ -1,0 +1,85 @@
+echo -e "\nA CURRENT: $CURRENT, words: >${(j:,:)words}<" >> /tmp/wfhistory
+
+words="${(Z+n+)BUFFER}"
+integer nwords="${#words}"
+local buf="$BUFFER"
+
+echo -e "B CURRENT: $CURRENT, words: >${(j:,:)words}<" >> /tmp/wfhistory
+
+# Remove words one by one, counting characters,
+# computing beginning of each word, to find
+# place to break the word into 2 halves (for
+# complete_in_word option)
+# If would use $LBUFFER, then would have to be able
+# to parse shell words, to extract word's halves
+
+local i word
+integer char_count=0
+typeset -a word_beginnings
+CURRENT="-1"
+
+for (( i=1; i<=nwords; i++ )); do
+    # Remove trailing spaces from $word - they may
+    # appear in case of syntax error, like "$((   <TAB>"
+    words[i]="${words[i]%% ##}"
+
+    word="${words[i]}"
+
+    # Remove white spaces
+    buf="${buf##(#m)[^$word[1]]#}"
+    # Count them
+    char_count=char_count+"$#MATCH"
+    # This is the beginning of current word
+    word_beginnings[i]="$char_count"
+
+    # Remove the word
+    MATCH=""
+    buf="${buf#(#m)$word}"
+
+    # If shell word not found, return. This shoudln't happen
+    [ -z "$MATCH" ] && { echo "Aborting" >> /tmp/wfhistory; return 0 }
+
+    # Spaces point to previous shell word
+    [[ "$CURRENT" -eq "-1" && "$char_count" -gt "$CURSOR" ]] && CURRENT=i-1
+
+    # Actual characters point to current shell word
+    char_count=char_count+"$#word"
+    [[ "$CURRENT" -eq "-1" && "$char_count" -ge "$CURSOR" ]] && CURRENT=i
+done 
+
+# What's left in $buf can be only white spaces
+char_count=char_count+"$#buf"
+[[ "$CURRENT" -eq -1 && "$char_count" -ge "$CURSOR" ]] && CURRENT=i-1
+
+# Divide words[CURRENT] into two halves
+integer diff=$(( CURSOR - word_beginnings[CURRENT] ))
+word="${words[CURRENT]}"
+local left="${word[1,diff]}"
+local right="${word[diff+1,-1]}"
+
+echo "C CURRENT: $CURRENT, CURSR: $CURSOR, lft: |$left[*]|, rght: |$right|, words: >${(j:,:)words}<" >> /tmp/wfhistory
+
+# History is searched for words that start with $PREFIX
+PREFIX="${left}"
+IPREFIX=''
+# ... and end with $SUFFIX
+SUFFIX="${right}"
+ISUFFIX=''
+
+echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|" >> /tmp/wfhistory
+
+{
+    compadd () {
+        local -a found
+        builtin compadd -O found "$@"
+        [[ "$#found" -eq 0 ]] && echo -n "_empty_ " >> /tmp/wfhistory || echo "${found[@]}" >> /tmp/wfhistory
+        builtin compadd -Q -U "${(@)${(@)found#$PREFIX}%$SUFFIX}"
+    }
+    echo "Calling _history" >> /tmp/wfhistory
+    _history
+    echo >> /tmp/wfhistory
+} always {
+    unfunction compadd
+}
+
+# vim:ft=zsh
