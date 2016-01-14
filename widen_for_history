@@ -10,9 +10,6 @@ echo -e "B CURRENT: $CURRENT, words: >${(j:,:)words}<" >> /tmp/wfhistory
 # computing beginning of each word, to find
 # place to break the word into 2 halves (for
 # complete_in_word option)
-# This handles better the case $(( 0 |+ 1 ))
-# while LBUFFER approach would handle better
-# the following case ${|a ("|" is cursor)
 
 local i word
 integer char_count=0
@@ -81,7 +78,6 @@ echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|" >> /tmp/wfhistory
     }
     echo "Calling _history" >> /tmp/wfhistory
     _history
-    echo >> /tmp/wfhistory
 } always {
     unfunction compadd
 }
