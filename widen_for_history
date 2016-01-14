@@ -67,6 +67,8 @@ IPREFIX=''
 SUFFIX="${right}"
 ISUFFIX=''
 
+local PREFIX_bkp="$PREFIX" SUFFIX_bkp="$SUFFIX"
+
 echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|" >> /tmp/wfhistory
 
 {
@@ -74,6 +76,10 @@ echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|" >> /tmp/wfhistory
         local -a found
         builtin compadd -O found "$@"
         [[ "$#found" -eq 0 ]] && echo -n "_empty_ " >> /tmp/wfhistory || echo "${found[@]}" >> /tmp/wfhistory
+
+        PREFIX="${PREFIX#$PREFIX_bkp}"
+        SUFFIX="${SUFFIX%$SUFFIX_bkp}"
+
         builtin compadd -Q -U "${(@)${(@)found#$PREFIX}%$SUFFIX}"
     }
     echo "Calling _history" >> /tmp/wfhistory
