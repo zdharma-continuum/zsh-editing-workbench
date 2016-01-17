@@ -8,15 +8,17 @@ local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
 autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
-typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
+typeset -g __zew_csw_index __zew_csw_prev_index __zew_csw_left __zew_csw_right
 typeset -ga __zew_csw_found
 __zew_csw_found=( "$reply[@]" )
 
 # Consecutive call?
 if [ "$WIDGET" = "$LASTWIDGET" ]; then
+    __zew_csw_prev_index="$__zew_csw_index"
     (( __zew_csw_index ++ ))
 else
-    (( __zew_csw_index = 1 ))
+    __zew_csw_index="1"
+    __zew_csw_prev_index="-1"
     __zew_csw_left="$ZEW_PB_LEFT"
     __zew_csw_right="$ZEW_PB_RIGHT"
     __zew_csw_found=( )
@@ -32,7 +34,17 @@ if [ "$#__zew_csw_found" -eq "0" ]; then
     done
 fi
 
-zle -M "`print -rl "${__zew_csw_found[@]}"`"
+# Remove "highlight" from previous active element
+if [ "$__zew_csw_prev_index" -ne "-1" ]; then
+    local val="$__zew_csw_found[__zew_csw_prev_index]"
+    val="${${val%-}#-}"
+    __zew_csw_found[__zew_csw_prev_index]="$val"
+fi
+
+# Highlight current active element
+__zew_csw_found[__zew_csw_index]="-${__zew_csw_found[__zew_csw_index]}-"
+
+zle -M -- "${(F)__zew_csw_found}"
 
 # Regenerate command line
 buf=""
