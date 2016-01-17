@@ -69,8 +69,10 @@ for (( i=1; i<=nwords; i++ )); do
 done 
 
 # What's left in $buf can be only white spaces
-# Visual cursor right after spaces (-ge) -> enough to select last word
 char_count=char_count+"$#buf"
+ZEW_PB_SPACES[i]="$buf"
+
+# Visual cursor right after spaces (-ge) -> enough to select last word
 [[ "$ZEW_PB_SELECTED_WORD" -eq "-1" && "$char_count" -ge "$CURSOR" ]] && ZEW_PB_SELECTED_WORD=$(( i-1 ))
 
 # Divide active word into two halves
