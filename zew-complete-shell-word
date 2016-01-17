@@ -20,7 +20,12 @@ if [ "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]; then
         (( __zew_csw_index -- ))
     fi
 else
-    __zew_csw_index="1"
+    if [[ "$WIDGET" != *-backwards ]]; then
+        __zew_csw_index="1"
+    else
+        # Will get changed into $#__zew_csw_found
+        __zew_csw_index="0"
+    fi
     __zew_csw_left="$ZEW_PB_LEFT"
     __zew_csw_right="$ZEW_PB_RIGHT"
     __zew_csw_found=( )
@@ -36,6 +41,11 @@ if [ "$#__zew_csw_found" -eq "0" ]; then
     done
 fi
 
+# Guard values of the index
+[ "$__zew_csw_index" -le 0 ] && __zew_csw_index="$#__zew_csw_found"
+[ "$__zew_csw_index" -gt "$#__zew_csw_found" ] && __zew_csw_index=1
+
+# Display matches
 typeset -a disp_list
 disp_list=( "$__zew_csw_found[@]" )
 disp_list[__zew_csw_index]="-${disp_list[__zew_csw_index]}-"
