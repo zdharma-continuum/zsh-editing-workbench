@@ -9,6 +9,8 @@ autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
 typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
+typeset -ga __zew_csw_found
+__zew_csw_found=( "$reply[@]" )
 
 # Consecutive call?
 if [ "$WIDGET" = "$LASTWIDGET" ]; then
@@ -17,14 +19,20 @@ else
     (( __zew_csw_index = 1 ))
     __zew_csw_left="$ZEW_PB_LEFT"
     __zew_csw_right="$ZEW_PB_RIGHT"
+    __zew_csw_found=( )
 fi
 
 # Find history words matching $left ... $right
-typeset -a found
-typeset -U found
-repeat 1; do
-    found=( "${(@M)historywords:#(#i)$~__zew_csw_left*$~__zew_csw_right}" )
-done
+if [ "$#__zew_csw_found" -eq "0" ]; then
+    typeset -U __zew_csw_found
+    repeat 1; do
+        __zew_csw_found=( "${(@M)historywords:#(#i)$~__zew_csw_left*$~__zew_csw_right}" )
+        # Remember for consecutive calls
+        reply=( "$__zew_csw_found[@]" )
+    done
+fi
+
+zle -M "`print -rl "${__zew_csw_found[@]}"`"
 
 # Regenerate command line
 buf=""
@@ -32,7 +40,7 @@ integer nwords="${#ZEW_PB_WORDS}"
 integer newcursor=0
 for (( i=1; i<=nwords; i++ )); do
     if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
-        buf+="${ZEW_PB_SPACES[i]}${found[__zew_csw_index]}"
+        buf+="${ZEW_PB_SPACES[i]}${__zew_csw_found[__zew_csw_index]}"
         newcursor="$#buf"
     else
         buf+="${ZEW_PB_SPACES[i]}${ZEW_PB_WORDS[i]}"
