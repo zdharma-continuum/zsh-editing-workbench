@@ -40,8 +40,9 @@ autoload -Uz zew-backward-kill-shell-word zew-transpose-shell-words select-word-
 # 6. Ctrl-W to kill word according to configured style
 # 7. Alt-r to transpose words according to configured style
 # 8. Alt-/ to complete word from history
-# 9. Ctrl-J to break line
-# 10. To undo
+# 9. Alt-h to complete word from history (custom version)
+# 10. Ctrl-J to break line
+# 11. To undo
 
 # 1. Alt-w to kill a shell word
 zle -N zew-backward-kill-shell-word
@@ -84,16 +85,17 @@ zstyle ':completion:history-words:*' remove-all-dups true
 zstyle ':completion:history-words:*' sort true
 zstyle ':completion:*' range 50000:10000 # TODO: from configuration
 
-# 9. Break line
+# 9. Complete word from history (custom version)
+autoload zew-complete-shell-word
+zle -N zew-complete-shell-word
+bindkey "^[h" zew-complete-shell-word
+
+# 10. Break line
 if [[ "$MC_SID" != "" || "$MC_CONTROL_PID" != "" ]]; then
     bindkey "^J" accept-line
 else
     bindkey "^J" self-insert
 fi
 
-# 10. Undo
+# 11. Undo
 bindkey "^_" undo
-
-#autoload widen_for_history
-#zle -N widen_for_history
-#zstyle ':completion:*' completer widen_for_history _complete

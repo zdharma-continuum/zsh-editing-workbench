@@ -39,7 +39,9 @@ blue color set on the key shortcut:
             (cursor needs to be placed on beginning of word to swap)
 8. ${h3}Alt-/${rst}  - complete ${h4}some word${rst} from history (explained
             in next section}
-9. ${h3}Ctrl-_${rst} - undo
+9. ${h2}Alt-h${rst}  - complete ${h4}shell word${rst} from history (custom version)
+10. ${h3}Ctrl-J${rst} - break line
+11. ${h3}Ctrl-_${rst} - undo
 
 
 ${h1}Definitions${rst}
@@ -63,7 +65,8 @@ configured in zew.conf to be one of:
              with default \$WORDCHARS
 
 ${h4}Some word${rst} is in general a sophisticated word, but not a shell word,
-because of bugs in history word completion.
+because of bugs in history word completion. ${h4}Some word${rst} is rather not
+build from special characters, it works well for normal characters.
 "
 
 LESS="$LESS_bkp"
