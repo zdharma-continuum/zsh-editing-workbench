@@ -1,4 +1,4 @@
-echo -e "\nA CURRENT: $CURRENT, words: >${(j:,:)words}<" >> /tmp/wfhistory
+echo -e "\nA CURRENT: $CURRENT, words: >${(j:,:)words}< BUFFER: |$BUFFER|, QIPREFIX: |$QIPREFIX|, QISUFFIX: |$QISUFFIX|" >> /tmp/wfhistory
 
 words="${(Z+n+)BUFFER}"
 integer nwords="${#words}"
@@ -17,10 +17,6 @@ typeset -a word_beginnings
 CURRENT="-1"
 
 for (( i=1; i<=nwords; i++ )); do
-    # Remove trailing spaces from $word - they may
-    # appear in case of syntax error, like "$((   <TAB>"
-    words[i]="${words[i]%% ##}"
-
     word="${words[i]}"
 
     # Remove white spaces
@@ -69,23 +65,42 @@ ISUFFIX=''
 
 local PREFIX_bkp="$PREFIX" SUFFIX_bkp="$SUFFIX"
 
-echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|" >> /tmp/wfhistory
+echo "PREFIX: |$PREFIX|, SUFFIX: |$SUFFIX|, words: >$words[*]<" >> /tmp/wfhistory
 
 {
     compadd () {
         local -a found
+
+        echo Calling builtin compadd -O found "$*" >> /tmp/wfhistory
+
         builtin compadd -O found "$@"
-        [[ "$#found" -eq 0 ]] && echo -n "_empty_ " >> /tmp/wfhistory || echo "${found[@]}" >> /tmp/wfhistory
+        echo "Context: $compstate[context]" >> /tmp/wfhistory
 
-        PREFIX="${PREFIX#$PREFIX_bkp}"
-        SUFFIX="${SUFFIX%$SUFFIX_bkp}"
+        found=( "${(u)found[@]}" )
+        PREFIX="${PREFIX}"
+        SUFFIX="${SUFFIX}"
 
-        builtin compadd -Q -U "${(@)${(@)found#$PREFIX}%$SUFFIX}"
+        # Insertion doesn't recognize $((
+        #[ "$compstate[context]" = "math" ] && found=( "${(@)${(@)found#$PREFIX}%$SUFFIX}" )
+
+        [[ "$#found" -eq 0 ]] && echo -n "_empty_ " >> /tmp/wfhistory || echo ">>>>${(j:,:)found}<<<<[$#found]" >> /tmp/wfhistory
+
+        compstate[context]="command"
+
+        builtin compadd -Q -U "${(@)found}"
+        xyz=$?
+
+        echo "2D context: $compstate[context], exact_string: $compstate[exact_string], ignored $compstate[ignored], "\
+                "insert: $compstate[insert], insert_positions: $compstate[insert_positions], "\
+                "last_prompt: $compstate[last_prompt], restore: $compstate[restore], BUFFER: |$BUFFER|, CURSOR: |$CURSOR|" >> /tmp/wfhistory
+
+        ?=$xyz
     }
     echo "Calling _history" >> /tmp/wfhistory
     _history
 } always {
     unfunction compadd
+    echo "FINAL BUFFER: |$BUFFER|" >> /tmp/wfhistory
 }
 
 # vim:ft=zsh
