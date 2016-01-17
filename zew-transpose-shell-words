@@ -27,16 +27,21 @@ ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD]="$ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD-1]"
 ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD-1]="$tmp"
 
 # Build BUFFER
-integer newcursor
-BUFFER=""
 integer size="${#ZEW_PB_WORDS}"
+integer newcursor
+buf=""
+
 for (( i=1; i<=size; i++ )); do
-    BUFFER+="$ZEW_PB_SPACES[i]$ZEW_PB_WORDS[i]"
-    [ "$i" = "$ZEW_PB_SELECTED_WORD" ] && newcursor="$#BUFFER"
+    buf+="$ZEW_PB_SPACES[i]$ZEW_PB_WORDS[i]"
+    [ "$i" = "$ZEW_PB_SELECTED_WORD" ] && newcursor="$#buf"
 done
-CURSOR="$newcursor"
 
 # Append final white spaces
-BUFFER+="$ZEW_PB_SPACES[i]"
+buf+="$ZEW_PB_SPACES[i]"
+
+BUFFER="$buf"
+CURSOR="$newcursor"
 
 return 0
+
+# vim:ft=zsh
