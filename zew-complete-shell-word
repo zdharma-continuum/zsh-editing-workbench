@@ -1,76 +1,32 @@
-setopt localoptions
+emulate -LR zsh
 setopt typesetsilent extendedglob noshortloops
 
-typeset -a words spaces
-words=( "${(Z+n+)BUFFER}" )
-integer nwords="${#words}"
-local buf="$BUFFER"
+# Prepare output variables for zew-process-buffer
+local ZEW_PB_WORDS ZEW_PB_WORDS_BEGINNINGS ZEW_PB_SPACES 
+local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
 
-# Remove words one by one, counting characters,
-# computing beginning of each word, to find
-# place to break the word into 2 halves (for
-# complete_in_word option)
+autoload zew-process-buffer
+zew-process-buffer "$BUFFER"
 
-local i word
-integer char_count=0
-typeset -a word_beginnings
-integer selected_shell_word=-1
-
-for (( i=1; i<=nwords; i++ )); do
-    word="${words[i]}"
-
-    # Remove white spaces
-    buf="${buf##(#m)[^$word[1]]#}"
-    # Count them
-    char_count=char_count+"$#MATCH"
-    # This is the beginning of current word
-    word_beginnings[i]="$char_count"
-    # Remember the spaces
-    spaces[i]="$MATCH"
-
-    # Remove the word
-    MATCH=""
-    buf="${buf#(#m)$word}"
-
-    # If shell word not found, return. This shoudln't happen
-    [ -z "$MATCH" ] && return 0
-
-    # Spaces point to previous shell word
-    # Visual cursor right after spaces (-ge) -> not enough to select previous word (-gt required)
-    [[ "$selected_shell_word" -eq "-1" && "$char_count" -gt "$CURSOR" ]] && selected_shell_word=i-1
-
-    # Actual characters point to current shell word
-    # Visual cursor right after letters (-ge) -> enough to select current word
-    char_count=char_count+"$#word"
-    [[ "$selected_shell_word" -eq "-1" && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i
-done 
-
-# What's left in $buf can be only white spaces
-# Visual cursor right after spaces (-ge) -> enough to select last word
-char_count=char_count+"$#buf"
-[[ "$selected_shell_word" -eq -1 && "$char_count" -ge "$CURSOR" ]] && selected_shell_word=i-1
-
-# Divide words[selected_shell_word] into two halves
-integer diff=$(( CURSOR - word_beginnings[selected_shell_word] ))
-word="${words[selected_shell_word]}"
-local left="${word[1,diff]}"
-local right="${word[diff+1,-1]}"
+#echo -e "\nGot words: >>${(j:,:)ZEW_PB_WORDS}<<, beginnings: ${(j:,:)ZEW_PB_WORDS_BEGINNINGS}, "\
+#        "spaces: >>${(j:,:)ZEW_PB_SPACES}<<, selected: $ZEW_PB_SELECTED_WORD, left: $ZEW_PB_LEFT, right: $ZEW_PB_RIGHT"
 
 # Find history words matching $left ... $right
 typeset -a found
 typeset -U found
 repeat 1; do
-    found=( "${(@M)historywords:#(#i)$~left*$~right}" )
+    found=( "${(@M)historywords:#(#i)$~ZEW_PB_LEFT*$~ZEW_PB_RIGHT}" )
 done
 #print -rl "Found:" "$found[@]"
 
 # Regenerate command line
 buf=""
+integer nwords="${#ZEW_PB_WORDS}"
 for (( i=1; i<=nwords; i++ )); do
-    if [ "$i" = "$selected_shell_word" ]; then
-        buf+="${spaces[i]}${found[2]}"
+    if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
+        buf+="${ZEW_PB_SPACES[i]}${found[2]}"
     else
-        buf+="${spaces[i]}${words[i]}"
+        buf+="${ZEW_PB_SPACES[i]}${ZEW_PB_WORDS[i]}"
     fi
 done
 BUFFER="$buf"

@@ -1,0 +1,82 @@
+# Input:
+# $1 - buffer to process
+#
+# Output:
+# ZEW_PB_WORDS - split of "$1" into shell words; array
+# ZEW_PB_WORDS_BEGINNINGS - indexes of first letters of corresponding ZEW_PB_WORDS in ZEW_PB_WORDS
+# ZEW_PB_SPACES - white spaces before corresponding ZEW_PB_WORDS in ZEW_PB_WORDS
+# ZEW_PB_SELECTED_WORD - index in ZEW_PB_WORDS pointing to word activated by CURSOR position
+# ZEW_PB_LEFT - left part of active word
+# ZEW_PB_RIGHT - right part of active word
+#
+
+emulate -LR zsh
+setopt typesetsilent extendedglob noshortloops
+
+local MBEGIN MEND MATCH mbegin mend match
+
+local buf="$1"
+ZEW_PB_WORDS=( "${(Z+n+)BUFFER}" )
+ZEW_PB_SPACES=( )
+ZEW_PB_WORDS_BEGINNINGS=( )
+ZEW_PB_SELECTED_WORD="-1"
+
+integer nwords="${#ZEW_PB_WORDS}"
+
+# Remove ZEW_PB_WORDS one by one, counting characters,
+# computing beginning of each word, to find
+# place to break the word into 2 halves (for
+# complete_in_word option)
+
+local i word
+integer char_count=0
+
+# (Z) handles spaces nicely, but we need them for the user
+# Also compute words beginnings and the selected word
+for (( i=1; i<=nwords; i++ )); do
+    word="${ZEW_PB_WORDS[i]}"
+
+    # In general, $buf can start with white spaces
+    # We will not search for them, but instead for
+    # leading character of current shell word,
+    # negated. This is an ambition to completely
+    # avoid character classes
+
+    # Remove white spaces
+    buf="${buf##(#m)[^$word[1]]#}"
+    # Count them
+    char_count=char_count+"$#MATCH"
+    # This is the beginning of current word
+    ZEW_PB_WORDS_BEGINNINGS[i]=$(( char_count + 1 ))
+    # Remember the spaces
+    ZEW_PB_SPACES[i]="$MATCH"
+
+    # Remove the word
+    MATCH=""
+    buf="${buf#(#m)$word}"
+
+    # If shell word not found, return. This shoudln't happen
+    [ -z "$MATCH" ] && return 0
+
+    # Spaces point to previous shell word
+    # Visual cursor right after spaces (-ge) -> not enough to select previous word (-gt required)
+    [[ "$ZEW_PB_SELECTED_WORD" -eq "-1" && "$char_count" -gt "$CURSOR" ]] && ZEW_PB_SELECTED_WORD=$(( i-1 ))
+
+    # Actual characters point to current shell word
+    # Visual cursor right after letters (-ge) -> enough to select current word
+    char_count=char_count+"$#word"
+    [[ "$ZEW_PB_SELECTED_WORD" -eq "-1" && "$char_count" -ge "$CURSOR" ]] && ZEW_PB_SELECTED_WORD="$i"
+done 
+
+# What's left in $buf can be only white spaces
+# Visual cursor right after spaces (-ge) -> enough to select last word
+char_count=char_count+"$#buf"
+[[ "$ZEW_PB_SELECTED_WORD" -eq "-1" && "$char_count" -ge "$CURSOR" ]] && ZEW_PB_SELECTED_WORD=$(( i-1 ))
+
+# Divide active word into two halves
+integer diff=$(( CURSOR - ZEW_PB_WORDS_BEGINNINGS[ZEW_PB_SELECTED_WORD] + 1 ))
+word="${ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD]}"
+ZEW_PB_LEFT="${word[1,diff]}"
+ZEW_PB_RIGHT="${word[diff+1,-1]}"
+
+# vim:ft=zsh
