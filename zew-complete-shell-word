@@ -9,8 +9,7 @@ autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
 typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
-typeset -ga __zew_csw_found
-__zew_csw_found=( "$reply[@]" )
+typeset -gaU __zew_csw_found
 
 # Consecutive call?
 if [ "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]; then
@@ -33,11 +32,8 @@ fi
 
 # Find history words matching $left ... $right
 if [ "$#__zew_csw_found" -eq "0" ]; then
-    typeset -U __zew_csw_found
     repeat 1; do
         __zew_csw_found=( "${(@M)historywords:#(#i)$__zew_csw_left*$__zew_csw_right}" )
-        # Remember for consecutive calls
-        reply=( "$__zew_csw_found[@]" )
     done
 fi
 
