@@ -13,8 +13,12 @@ typeset -ga __zew_csw_found
 __zew_csw_found=( "$reply[@]" )
 
 # Consecutive call?
-if [ "$WIDGET" = "$LASTWIDGET" ]; then
-    (( __zew_csw_index ++ ))
+if [ "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]; then
+    if [[ "$WIDGET" != *-backwards ]]; then
+        (( __zew_csw_index ++ ))
+    else
+        (( __zew_csw_index -- ))
+    fi
 else
     __zew_csw_index="1"
     __zew_csw_left="$ZEW_PB_LEFT"
