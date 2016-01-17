@@ -8,27 +8,40 @@ local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
 autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
-#echo -e "\nGot words: >>${(j:,:)ZEW_PB_WORDS}<<, beginnings: ${(j:,:)ZEW_PB_WORDS_BEGINNINGS}, "\
-#        "spaces: >>${(j:,:)ZEW_PB_SPACES}<<, selected: $ZEW_PB_SELECTED_WORD, left: $ZEW_PB_LEFT, right: $ZEW_PB_RIGHT"
+typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
+
+# Consecutive call?
+if [ "$WIDGET" = "$LASTWIDGET" ]; then
+    (( __zew_csw_index ++ ))
+else
+    (( __zew_csw_index = 1 ))
+    __zew_csw_left="$ZEW_PB_LEFT"
+    __zew_csw_right="$ZEW_PB_RIGHT"
+fi
 
 # Find history words matching $left ... $right
 typeset -a found
 typeset -U found
 repeat 1; do
-    found=( "${(@M)historywords:#(#i)$~ZEW_PB_LEFT*$~ZEW_PB_RIGHT}" )
+    found=( "${(@M)historywords:#(#i)$~__zew_csw_left*$~__zew_csw_right}" )
 done
-#print -rl "Found:" "$found[@]"
 
 # Regenerate command line
 buf=""
 integer nwords="${#ZEW_PB_WORDS}"
+integer newcursor=0
 for (( i=1; i<=nwords; i++ )); do
     if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
-        buf+="${ZEW_PB_SPACES[i]}${found[2]}"
+        buf+="${ZEW_PB_SPACES[i]}${found[__zew_csw_index]}"
+        newcursor="$#buf"
     else
         buf+="${ZEW_PB_SPACES[i]}${ZEW_PB_WORDS[i]}"
     fi
 done
+
+# Set command line
 BUFFER="$buf"
+# Move cursor to the end of word
+CURSOR="$newcursor"
 
 # vim:ft=zsh
