@@ -50,7 +50,7 @@ integer to_display=$(( LINES / 2 ))
 # Display matches
 typeset -a disp_list
 disp_list=( "${(@)__zew_csw_found[1,to_display]}" )
-disp_list[__zew_csw_index]="-${disp_list[__zew_csw_index]}-"
+disp_list[__zew_csw_index]="> ${disp_list[__zew_csw_index]} <"
 zle -M -- "${(F)disp_list}"
 
 # Regenerate command line
