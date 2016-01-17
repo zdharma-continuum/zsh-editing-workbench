@@ -23,7 +23,7 @@ else
     if [[ "$WIDGET" != *-backwards ]]; then
         __zew_csw_index="1"
     else
-        # Will get changed into $#__zew_csw_found
+        # Will get changed into $to_display limit
         __zew_csw_index="0"
     fi
     __zew_csw_left="$ZEW_PB_LEFT"
@@ -42,12 +42,14 @@ if [ "$#__zew_csw_found" -eq "0" ]; then
 fi
 
 # Guard values of the index
-[ "$__zew_csw_index" -le 0 ] && __zew_csw_index="$#__zew_csw_found"
-[ "$__zew_csw_index" -gt "$#__zew_csw_found" ] && __zew_csw_index=1
+integer to_display=$(( LINES / 2 ))
+[ "$to_display" -gt "$#__zew_csw_found" ] && to_display="$#__zew_csw_found"
+[ "$__zew_csw_index" -le 0 ] && __zew_csw_index="$to_display"
+[ "$__zew_csw_index" -gt "$to_display" ] && __zew_csw_index=1
 
 # Display matches
 typeset -a disp_list
-disp_list=( "$__zew_csw_found[@]" )
+disp_list=( "${(@)__zew_csw_found[1,to_display]}" )
 disp_list[__zew_csw_index]="-${disp_list[__zew_csw_index]}-"
 zle -M -- "${(F)disp_list}"
 
