@@ -86,11 +86,11 @@ zstyle ':completion:history-words:*' sort true
 zstyle ':completion:*' range 50000:10000 # TODO: from configuration
 
 # 9. Complete word from history (custom version)
-autoload zew-complete-shell-word
-zle -N zew-complete-shell-word
-zle -N zew-complete-shell-word-backwards zew-complete-shell-word
-bindkey "^[h" zew-complete-shell-word
-bindkey "^[H" zew-complete-shell-word-backwards
+autoload zew-history-complete-word
+zle -N zew-history-complete-word
+zle -N zew-history-complete-word-backwards zew-history-complete-word
+bindkey "^[h" zew-history-complete-word
+bindkey "^[H" zew-history-complete-word-backwards
 
 # 10. Break line
 if [[ "$MC_SID" != "" || "$MC_CONTROL_PID" != "" ]]; then
