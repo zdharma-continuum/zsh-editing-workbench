@@ -21,5 +21,5 @@ should be `antigen apply`. The config files will be in `~/.config/znt`.
 
 ## Introduction
 
-![zew refcard](http://imageshack.com/a/img911/496/J73Bo1.png)
+![zew refcard](http://imageshack.com/a/img910/8297/JiOHGX.png)
 
