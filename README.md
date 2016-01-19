@@ -1,4 +1,4 @@
-![zew logo](http://imageshack.com/a/img911/6549/WNjz34.png)
+![zew logo](http://imageshack.com/a/img910/7592/HGM1Wo.gif)
 
 # Zsh Editing Workbench
 
