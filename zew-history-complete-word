@@ -12,53 +12,53 @@ local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
 autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
-typeset -g __zew_csw_index __zew_csw_left __zew_csw_right __zew_csw_finished
-typeset -gaU __zew_csw_found
+typeset -g __zew_hcw_index __zew_hcw_left __zew_hcw_right __zew_hcw_finished
+typeset -gaU __zew_hcw_found
 
 # Consecutive call?
 # zle recursive-edit will not change LASTWIDGET,
 # so the second call must be detected via first_call
-if [[ ("$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}") && "$__zew_csw_finished" != "1" ]]; then
+if [[ ("$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}") && "$__zew_hcw_finished" != "1" ]]; then
     integer first_call=0
-    [[ "$WIDGET" != *-backwards ]] && (( __zew_csw_index ++ )) || (( __zew_csw_index -- ))
+    [[ "$WIDGET" != *-backwards ]] && (( __zew_hcw_index ++ )) || (( __zew_hcw_index -- ))
 else
     integer first_call=1
     # '0' will get changed into $to_display limit
-    [[ "$WIDGET" != *-backwards ]] && __zew_csw_index="1" || __zew_csw_index="0"
-    __zew_csw_left="$ZEW_PB_LEFT"
-    __zew_csw_right="$ZEW_PB_RIGHT"
-    __zew_csw_found=( )
-    __zew_csw_finished="0"
+    [[ "$WIDGET" != *-backwards ]] && __zew_hcw_index="1" || __zew_hcw_index="0"
+    __zew_hcw_left="$ZEW_PB_LEFT"
+    __zew_hcw_right="$ZEW_PB_RIGHT"
+    __zew_hcw_found=( )
+    __zew_hcw_finished="0"
 fi
 
 # Find history words matching $left ... $right
-if [ "$#__zew_csw_found" -eq "0" ]; then
+if [ "$#__zew_hcw_found" -eq "0" ]; then
     repeat 1; do
-        __zew_csw_found=( "${(@M)historywords:#(#i)$__zew_csw_left*$__zew_csw_right}" )
+        __zew_hcw_found=( "${(@M)historywords:#(#i)$__zew_hcw_left*$__zew_hcw_right}" )
     done
 fi
 
-if [ "$#__zew_csw_found" -le "0" ]; then
+if [ "$#__zew_hcw_found" -le "0" ]; then
     zle -M "No matches found"
     return 0
 fi
 
 # Pagination, index value guards
 integer page_size=$(( LINES / 2 ))
-integer max_index="$#__zew_csw_found"
+integer max_index="$#__zew_hcw_found"
 [ "$page_size" -gt "$max_index" ] && page_size="$max_index"
-[ "$__zew_csw_index" -le 0 ] && __zew_csw_index="$max_index"
-[ "$__zew_csw_index" -gt "$max_index" ] && __zew_csw_index=1
-integer page_start_idx=$(( ((__zew_csw_index-1)/page_size)*page_size+1 ))
-integer on_page_idx=$(( (__zew_csw_index-1) % page_size + 1 ))
+[ "$__zew_hcw_index" -le 0 ] && __zew_hcw_index="$max_index"
+[ "$__zew_hcw_index" -gt "$max_index" ] && __zew_hcw_index=1
+integer page_start_idx=$(( ((__zew_hcw_index-1)/page_size)*page_size+1 ))
+integer on_page_idx=$(( (__zew_hcw_index-1) % page_size + 1 ))
 
 # Display matches
 typeset -a disp_list
-disp_list=( "${(@)__zew_csw_found[page_start_idx,page_start_idx+page_size-1]}" )
+disp_list=( "${(@)__zew_hcw_found[page_start_idx,page_start_idx+page_size-1]}" )
 disp_list[on_page_idx]="> ${disp_list[on_page_idx]} <"
 zle -M -- \
-"Searching for '${__zew_csw_left}_${__zew_csw_right}'. "\
-"Element #$__zew_csw_index of $max_index"$'\n'"${(F)disp_list}"
+"Searching for '${__zew_hcw_left}_${__zew_hcw_right}'. "\
+"Element #$__zew_hcw_index of $max_index"$'\n'"${(F)disp_list}"
 
 # Regenerate command line
 buf=""
@@ -66,7 +66,7 @@ integer nwords="${#ZEW_PB_WORDS}"
 integer newcursor=0
 for (( i=1; i<=nwords; i++ )); do
     if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
-        buf+="${ZEW_PB_SPACES[i]}${__zew_csw_found[__zew_csw_index]}"
+        buf+="${ZEW_PB_SPACES[i]}${__zew_hcw_found[__zew_hcw_index]}"
         newcursor="$#buf"
     else
         buf+="${ZEW_PB_SPACES[i]}${ZEW_PB_WORDS[i]}"
@@ -97,7 +97,7 @@ if (( first_call ));then
 
     zle recursive-edit -K zhcw
     zle -M ""
-    __zew_csw_finished="1"
+    __zew_hcw_finished="1"
 fi
 
 # vim:ft=zsh
