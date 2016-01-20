@@ -1,6 +1,10 @@
 emulate -LR zsh
 setopt typesetsilent extendedglob noshortloops
 
+# When an error, then no cursor keys bindings
+zmodload zsh/terminfo 2>/dev/null
+zmodload zsh/termcap 2>/dev/null
+
 # Prepare output variables for zew-process-buffer
 local ZEW_PB_WORDS ZEW_PB_WORDS_BEGINNINGS ZEW_PB_SPACES 
 local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
@@ -72,7 +76,24 @@ BUFFER="$buf"
 CURSOR="$newcursor"
 
 if (( first_call ));then
-    zle recursive-edit -K main
+    # Make the zhcw keymap a copy of the current main
+    bindkey -N zhcw main
+
+    local down_widget="${WIDGET%-backwards}"
+    local up_widget="${down_widget}-backwards"
+
+    # Manual, termcap, terminfo
+    bindkey -M zhcw '^[OA' "$up_widget"
+    bindkey -M zhcw '^[OB' "$down_widget"
+    bindkey -M zhcw '^[[A' "$up_widget"
+    bindkey -M zhcw '^[[B' "$down_widget"
+    [ -n "$termcap[ku]" ] && bindkey -M zhcw "$termcap[ku]" "$up_widget"
+    [ -n "$termcap[kd]" ] && bindkey -M zhcw "$termcap[kd]" "$down_widget"
+    [ -n "$terminfo[kcuu1]" ] && bindkey -M zhcw "$terminfo[kcuu1]" "$up_widget"
+    [ -n "$terminfo[kcud1]" ] && bindkey -M zhcw "$terminfo[kcud1]" "$down_widget"
+
+    zle recursive-edit -K zhcw
+
     zle -M ""
 fi
 
