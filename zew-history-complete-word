@@ -16,19 +16,11 @@ typeset -gaU __zew_csw_found
 # so the second call must be detected via first_call
 if [[ "$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]]; then
     integer first_call=0
-    if [[ "$WIDGET" != *-backwards ]]; then
-        (( __zew_csw_index ++ ))
-    else
-        (( __zew_csw_index -- ))
-    fi
+    [[ "$WIDGET" != *-backwards ]] && (( __zew_csw_index ++ )) || (( __zew_csw_index -- ))
 else
     integer first_call=1
-    if [[ "$WIDGET" != *-backwards ]]; then
-        __zew_csw_index="1"
-    else
-        # Will get changed into $to_display limit
-        __zew_csw_index="0"
-    fi
+    # '0' will get changed into $to_display limit
+    [[ "$WIDGET" != *-backwards ]] && __zew_csw_index="1" || __zew_csw_index="0"
     __zew_csw_left="$ZEW_PB_LEFT"
     __zew_csw_right="$ZEW_PB_RIGHT"
     __zew_csw_found=( )
