@@ -12,13 +12,17 @@ typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
 typeset -gaU __zew_csw_found
 
 # Consecutive call?
-if [ "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]; then
+# zle recursive-edit will not change LASTWIDGET,
+# so the second call must be detected via first_call
+if [[ "$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]]; then
+    integer first_call=0
     if [[ "$WIDGET" != *-backwards ]]; then
         (( __zew_csw_index ++ ))
     else
         (( __zew_csw_index -- ))
     fi
 else
+    integer first_call=1
     if [[ "$WIDGET" != *-backwards ]]; then
         __zew_csw_index="1"
     else
@@ -74,5 +78,10 @@ done
 BUFFER="$buf"
 # Move cursor to the end of word
 CURSOR="$newcursor"
+
+if (( first_call ));then
+    zle recursive-edit -K main
+    zle -M ""
+fi
 
 # vim:ft=zsh
