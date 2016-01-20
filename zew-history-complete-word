@@ -55,7 +55,9 @@ integer on_page_idx=$(( (__zew_csw_index-1) % page_size + 1 ))
 typeset -a disp_list
 disp_list=( "${(@)__zew_csw_found[page_start_idx,page_start_idx+page_size-1]}" )
 disp_list[on_page_idx]="> ${disp_list[on_page_idx]} <"
-zle -M -- "Element #$__zew_csw_index of $max_index"$'\n'"${(F)disp_list}"
+zle -M -- \
+"Searching for '${__zew_csw_left}_${__zew_csw_right}'. "\
+"Element #$__zew_csw_index of $max_index"$'\n'"${(F)disp_list}"
 
 # Regenerate command line
 buf=""
