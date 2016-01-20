@@ -12,13 +12,13 @@ local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
 autoload zew-process-buffer
 zew-process-buffer "$BUFFER"
 
-typeset -g __zew_csw_index __zew_csw_left __zew_csw_right
+typeset -g __zew_csw_index __zew_csw_left __zew_csw_right __zew_csw_finished
 typeset -gaU __zew_csw_found
 
 # Consecutive call?
 # zle recursive-edit will not change LASTWIDGET,
 # so the second call must be detected via first_call
-if [[ "$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}" ]]; then
+if [[ ("$first_call" = "1" || "${WIDGET%-backwards}" = "${LASTWIDGET%-backwards}") && "$__zew_csw_finished" != "1" ]]; then
     integer first_call=0
     [[ "$WIDGET" != *-backwards ]] && (( __zew_csw_index ++ )) || (( __zew_csw_index -- ))
 else
@@ -28,6 +28,7 @@ else
     __zew_csw_left="$ZEW_PB_LEFT"
     __zew_csw_right="$ZEW_PB_RIGHT"
     __zew_csw_found=( )
+    __zew_csw_finished="0"
 fi
 
 # Find history words matching $left ... $right
@@ -95,8 +96,8 @@ if (( first_call ));then
     [ -n "$terminfo[kcud1]" ] && bindkey -M zhcw "$terminfo[kcud1]" "$down_widget"
 
     zle recursive-edit -K zhcw
-
     zle -M ""
+    __zew_csw_finished="1"
 fi
 
 # vim:ft=zsh
