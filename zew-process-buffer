@@ -6,7 +6,7 @@
 # ZEW_PB_WORDS - split of "$1" into shell words; array
 # ZEW_PB_WORDS_BEGINNINGS - indexes of first letters of corresponding words in ZEW_PB_WORDS
 # ZEW_PB_SPACES - white spaces before corresponding words in ZEW_PB_WORDS
-# ZEW_PB_SELECTED_WORD - index in ZEW_PB_WORDS pointing to word activated by CURSOR position
+# ZEW_PB_SELECTED_WORD - index in ZEW_PB_WORDS pointing to word activated by cursor position
 # ZEW_PB_LEFT - left part of active word
 # ZEW_PB_RIGHT - right part of active word
 #
