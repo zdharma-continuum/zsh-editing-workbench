@@ -6,7 +6,7 @@ Also check out [![ZNT](http://imageshack.com/a/img910/3618/oDHnuR.png) Zsh Navig
 and [![ZCA](http://imageshack.com/a/img911/8084/qSpO8a.png) Zsh Command Architect](https://github.com/psprint/zsh-cmd-architect)
 
 
-Incremental, in-word history _word_ searching (started with `Alt-H/h` or `Option-H/h` on Mac):
+Incremental history _word_ completing (started with `Alt-h/H` or `Option-h/H` on Mac):
 
 ![zew](http://imageshack.com/a/img907/1065/lJmzII.gif)
 
@@ -24,6 +24,9 @@ Add `antigen bundle psprint/zsh-editing-workbench` to `.zshrc`. There also
 should be `antigen apply`. The config files will be in `~/.config/znt`.
 
 ## Introduction
+
+Organized shortcuts for various command line editing operations, plus new
+operations (e.g. incremental history word completion).
 
 ![zew refcard](http://imageshack.com/a/img905/6423/XfzdYE.png)
 
