@@ -24,7 +24,7 @@ zew-process-buffer "$BUFFER" "$CURSOR"
 if [[ "$__zew_hcw_call_count" -le 1 || "$__zew_hcw_restart" = "1" ]]; then
     # '0' will get changed into $to_display limit
     [[ "$WIDGET" != *-backwards ]] && __zew_hcw_index="1" || __zew_hcw_index="0"
-    __zew_hcw_widget_name="$WIDGET"
+    __zew_hcw_widget_name="${WIDGET%-backwards}"
     __zew_hcw_left="$ZEW_PB_LEFT"
     __zew_hcw_right="$ZEW_PB_RIGHT"
     __zew_hcw_found=( )
