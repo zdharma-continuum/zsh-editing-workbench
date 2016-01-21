@@ -1,5 +1,5 @@
 # Input:
-# $1 - buffer to process
+# $1 - optional buffer to process (default is $BUFFER)
 # $2 - optional parameter containing cursor (default is $CURSOR)
 #
 # Output:
@@ -16,11 +16,10 @@ setopt typesetsilent extendedglob noshortloops
 
 local MBEGIN MEND MATCH mbegin mend match
 
-local buf="$1"
-local cursor="$CURSOR"
-[ -n "$2" ] && cursor="$2"
+local buf="${1:-$BUFFER}"
+local cursor="${2:-$CURSOR}"
 
-ZEW_PB_WORDS=( "${(Z+n+)BUFFER}" )
+ZEW_PB_WORDS=( "${(Z+n+)buf}" )
 ZEW_PB_SPACES=( )
 ZEW_PB_WORDS_BEGINNINGS=( )
 ZEW_PB_SELECTED_WORD="-1"
