@@ -6,6 +6,10 @@ Incremental, in-word history _word_ searching (started with `Alt-H/h` or `Option
 
 ![zew](http://imageshack.com/a/img907/1065/lJmzII.gif)
 
+Swapping, copying, deleting shell words, also undo:
+
+![zew](http://imageshack.com/a/img908/7765/zpdjOK.gif)
+
 ## Installation With Zgen
 
 Add `zgen load psprint/zsh-editing-workbench` to `.zshrc` and issue a `zgen reset` (this assumes that there is a proper `zgen save` construct in `.zshrc`).
