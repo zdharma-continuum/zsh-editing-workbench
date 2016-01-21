@@ -2,9 +2,9 @@
 
 # Zsh Editing Workbench
 
-Zsh Editing Workbench in action:
+Incremental, in-word history _word_ searching (started with `Alt-H/h` or `Option-H/h` on Mac):
 
-![zew](http://imageshack.com/a/img911/7091/wJKRAk.gif)
+![zew](http://imageshack.com/a/img907/1065/lJmzII.gif)
 
 ## Installation With Zgen
 
