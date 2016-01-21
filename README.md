@@ -2,6 +2,10 @@
 
 # Zsh Editing Workbench
 
+Also check out [![ZNT](http://imageshack.com/a/img910/3618/oDHnuR.png) Zsh Navigation Tools](https://github.com/psprint/zsh-navigation-tools)
+and [![ZCA](http://imageshack.com/a/img911/8084/qSpO8a.png) Zsh Command Architect](https://github.com/psprint/zsh-cmd-architect)
+
+
 Incremental, in-word history _word_ searching (started with `Alt-H/h` or `Option-H/h` on Mac):
 
 ![zew](http://imageshack.com/a/img907/1065/lJmzII.gif)
