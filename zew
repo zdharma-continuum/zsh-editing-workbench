@@ -10,7 +10,7 @@ local h4="$fg_bold[yellow]"
 local rst="$reset_color"
 
 local LESS_bkp="$LESS"
-LESS="-iRX"
+export LESS="-iRX"
 
 less <<<"
 ${h1}Key Bindings${rst}
@@ -69,5 +69,5 @@ rather not build from special characters, it works well for normal
 characters.
 "
 
-LESS="$LESS_bkp"
+export LESS="$LESS_bkp"
 
