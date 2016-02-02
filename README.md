@@ -14,6 +14,10 @@ Swapping, copying, deleting shell words, also undo:
 
 ![zew](http://imageshack.com/a/img908/7765/zpdjOK.gif)
 
+## Installation With [Zplugin](https://github.com/psprint/zplugin)
+
+Add `zplugin load psprint/zsh-editing-workbench` to `.zshrc`. The config files will be available in `~/.config/zew`.
+
 ## Installation With Zgen
 
 Add `zgen load psprint/zsh-editing-workbench` to `.zshrc` and issue a `zgen reset` (this assumes that there is a proper `zgen save` construct in `.zshrc`).
