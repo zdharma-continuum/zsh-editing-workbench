@@ -34,3 +34,13 @@ operations (e.g. incremental history word completion).
 
 ![zew refcard](http://imageshack.com/a/img905/6423/XfzdYE.png)
 
+### Configuring terminals
+
+**XTerm**
+
+To make `Alt` key work like expected under `XTerm` add `XTerm*metaSendsEscape: true` to your resource file, e.g.:
+
+```
+echo 'XTerm*metaSendsEscape: true' >> ~/.Xresources
+```
+
