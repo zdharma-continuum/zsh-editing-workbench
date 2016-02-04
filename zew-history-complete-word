@@ -80,6 +80,10 @@ for (( i=1; i<=nwords; i++ )); do
     fi
 done
 
+if [[ "$nwords" = "0" && "$ZEW_PB_SELECTED_WORD" = "0" ]]; then
+    buf+="${__zew_hcw_found[__zew_hcw_index]}"
+fi
+
 # Add trailing spaces
 buf+="$ZEW_PB_SPACES[i]"
 

@@ -24,7 +24,13 @@ ZEW_PB_SPACES=( )
 ZEW_PB_WORDS_BEGINNINGS=( )
 ZEW_PB_SELECTED_WORD="-1"
 
-integer nwords="${#ZEW_PB_WORDS}"
+# (Z+n+) will return 1 element for buf that is empty or only whitespace
+if [[ "$buf" = ( |$'\t')# ]]; then
+    ZEW_PB_WORDS=( )
+    integer nwords=0
+else
+    integer nwords="${#ZEW_PB_WORDS}"
+fi
 
 # Remove ZEW_PB_WORDS one by one, counting characters,
 # computing beginning of each word, to find
