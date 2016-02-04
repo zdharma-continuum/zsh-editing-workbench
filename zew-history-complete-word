@@ -70,7 +70,7 @@ zle -M -- \
 "Element #$__zew_hcw_index of $max_index"$'\n'"${(F)disp_list}"
 
 # Regenerate command line
-buf=""
+local buf=""
 integer nwords="${#ZEW_PB_WORDS}"
 for (( i=1; i<=nwords; i++ )); do
     if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
