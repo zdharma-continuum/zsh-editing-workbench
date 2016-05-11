@@ -32,7 +32,7 @@ should be `antigen apply`. The config files will be in `~/.config/znt`.
 Organized shortcuts for various command line editing operations, plus new
 operations (e.g. incremental history word completion).
 
-![zew refcard](http://imageshack.com/a/img905/6423/XfzdYE.png)
+![zew refcard](http://imageshack.com/a/img922/1959/4gXU1R.png)
 
 ### Configuring terminals
 
