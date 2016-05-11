@@ -29,7 +29,7 @@ done
 
 . "$CONFIG_DIR"/zew.conf
 
-autoload -Uz zew-backward-kill-shell-word zew-transpose-shell-words select-word-style zew
+autoload -Uz zew-backward-kill-shell-word zew-transpose-shell-words zew-rotate-shell-words select-word-style zew
 
 # Below are configured:
 # 1. Alt-w to kill a shell word
@@ -38,11 +38,12 @@ autoload -Uz zew-backward-kill-shell-word zew-transpose-shell-words select-word-
 # 4. Alt-M to just copy previous shell word
 # 5. Alt-. to copy last shell word from previous line, or line before that
 # 6. Ctrl-W to kill word according to configured style
-# 7. Alt-r to transpose words according to configured style
+# 7. Alt-y to transpose words according to configured style
 # 8. Alt-/ to complete word from history
 # 9. Alt-h to complete word from history (custom version)
 # 10. Ctrl-J to break line
 # 11. To undo
+# 12. Alt-r to rotate shell words right
 
 # 1. Alt-w to kill a shell word
 zle -N zew-backward-kill-shell-word
@@ -73,10 +74,10 @@ select-word-style "$zew_word_style"
 # 6. Ctrl-W to kill word according to configured style
 bindkey "^W" backward-kill-word
 
-# 7. Alt-r to transpose words according to configured style (cursor needs to be placed on beginning of word to swap)
+# 7. Alt-y to transpose words according to configured style (cursor needs to be placed on beginning of word to swap)
 autoload -Uz transpose-words-match
 zle -N transpose-words-match
-bindkey "^[r" transpose-words-match
+bindkey "^[y" transpose-words-match
 
 # 8. Alt-/ to complete word from history
 setopt hist_lex_words
@@ -101,3 +102,9 @@ fi
 
 # 11. Undo
 bindkey "^_" undo
+
+# 12. Alt-r to rotate shell words right
+zle -N zew-rotate-shell-words
+zle -N zew-rotate-shell-words-backwards zew-rotate-shell-words
+bindkey '^[r' zew-rotate-shell-words
+bindkey '^[R' zew-rotate-shell-words-backwards
