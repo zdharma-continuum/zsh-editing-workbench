@@ -2,9 +2,11 @@
 # as if zsh parsed the line.
 #
 # Code to activate the functionality with binding to Alt-t:
-# autoload zew-transpose-shell-words
-# zle -N zew-transpose-shell-words
-# bindkey "^[t" zew-transpose-shell-words
+# autoload zew-rotate-shell-words
+# zle -N zew-rotate-shell-words
+# zle -N zew-rotate-shell-words-backwards zew-rotate-shell-words
+# bindkey '^[r' zew-rotate-shell-words
+# bindkey '^[R' zew-rotate-shell-words-backwards
 
 local curcontext=":zle:$WIDGET"
 local MATCH MBEGIN MEND i
