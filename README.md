@@ -27,6 +27,27 @@ The config files will be available in `~/.config/zew`.
 Add `antigen bundle psprint/zsh-editing-workbench` to `.zshrc`. There also
 should be `antigen apply`. The config files will be in `~/.config/znt`.
 
+## Manual Installation
+
+After extracting `ZEW` to `{some-directory}` add following two lines
+to `~/.zshrc`:
+
+```zsh
+fpath+=( {some-directory} )
+source "{some-directory}/zsh-editing-workbench.plugin.zsh"
+```
+
+As you can see, no plugin manager is needed to use the `*.plugin.zsh`
+file. The above two lines of code are all that almost **all** plugin
+managers do. In fact, what's actually needed is only:
+
+```zsh
+source "{some-directory}/zsh-editing-workbench.plugin.zsh"
+```
+
+because `ZEW` detects if it is used by **any** plugin manager and can
+handle `$fpath` update by itself.
+
 ## Introduction
 
 Organized shortcuts for various command line editing operations, plus new
