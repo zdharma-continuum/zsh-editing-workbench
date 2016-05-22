@@ -64,7 +64,15 @@ integer on_page_idx=$(( (__zew_hcw_index-1) % page_size + 1 ))
 # Display matches
 typeset -a disp_list
 disp_list=( "${(@)__zew_hcw_found[page_start_idx,page_start_idx+page_size-1]}" )
-disp_list[on_page_idx]="> ${disp_list[on_page_idx]} <"
+
+# Add two spaces before every element
+disp_list=( "${(@)disp_list/(#m)*/  ${MATCH}}" )
+
+# Add > before active element
+local entry="${disp_list[on_page_idx]}"
+entry[1]='>'
+disp_list[on_page_idx]="$entry"
+
 zle -M -- \
 "Searching for '${__zew_hcw_left}_${__zew_hcw_right}'. "\
 "Element #$__zew_hcw_index of $max_index"$'\n'"${(F)disp_list}"
