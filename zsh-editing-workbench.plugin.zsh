@@ -35,6 +35,7 @@ fi
 
 set zew.conf
 
+local i
 for i; do
     if ! test -f "$CONFIG_DIR/$i"; then
         cp "$REPO_DIR/.config/zew/$i" "$CONFIG_DIR"
