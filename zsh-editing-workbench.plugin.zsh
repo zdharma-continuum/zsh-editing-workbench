@@ -84,9 +84,7 @@ bindkey "^[M" copy-prev-shell-word
 bindkey "^[." insert-last-word
 
 # Select chosen word style
-[[ "$zew_word_style" = "bash" || "$zew_word_style" = "normal" ||
-        "$zew_word_style" = "shell" || "$zew_word_style" = "bash" || 
-        "$zew_word_style" = "whitespace" || "$zew_word_style" = "default" ]] || zew_word_style="bash"
+[[ $zew_word_style = (bash|normal|shell|bash|whitespace|default) ]] || zew_word_style=normal
 
 WORDCHARS+=":\"'←↓→↑…«»≤≥„”’©½–"
 select-word-style "$zew_word_style"
