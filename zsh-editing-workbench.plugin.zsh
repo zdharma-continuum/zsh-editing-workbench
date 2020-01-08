@@ -88,6 +88,7 @@ bindkey "^[." insert-last-word
         "$zew_word_style" = "shell" || "$zew_word_style" = "bash" || 
         "$zew_word_style" = "whitespace" || "$zew_word_style" = "default" ]] || zew_word_style="bash"
 
+WORDCHARS+=":\"'←↓→↑…«»≤≥„”’©½–"
 select-word-style "$zew_word_style"
 
 # 6. Ctrl-W to kill word according to configured style
