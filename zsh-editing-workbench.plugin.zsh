@@ -7,18 +7,20 @@
 # to ~/.zshrc.
 #
 
-0="${(%):-%N}" # this gives immunity to functionargzero being unset
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
 ZEW_REPO_DIR="${0:h}"
 CONFIG_DIR="$HOME/.config/zew"
 
 #
 # Update FPATH if:
-# 1. Not loading with Zplugin
-# 2. Not having fpath already updated (that would equal: using other plugin manager)
+# 1. Not loading with a plugin manager
+# 2. Not having fpath already updated
 #
 
-if [[ -z "$ZPLG_CUR_PLUGIN" && "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
-    fpath+=( "$REPO_DIR" )
+if [[ ${zsh_loaded_plugins[-1]} != */zsh-editing-workbench && -z ${fpath[(r)${0:h}]} ]]
+then
+    fpath+=( "${0:h}" )
 fi
 
 #
