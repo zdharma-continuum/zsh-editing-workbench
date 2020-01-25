@@ -8,7 +8,7 @@
 #
 
 0="${(%):-%N}" # this gives immunity to functionargzero being unset
-REPO_DIR="${0%/*}"
+ZEW_REPO_DIR="${0:h}"
 CONFIG_DIR="$HOME/.config/zew"
 
 #
@@ -38,7 +38,7 @@ set zew.conf
 local i
 for i; do
     if ! test -f "$CONFIG_DIR/$i"; then
-        cp "$REPO_DIR/.config/zew/$i" "$CONFIG_DIR"
+        cp "$ZEW_REPO_DIR/.config/zew/$i" "$CONFIG_DIR"
     fi
 done
 
