@@ -1,8 +1,6 @@
 ![zew logo](http://imageshack.com/a/img924/5479/AiIW6X.gif)
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D6XDCHDSBDSDG)
-
-# Zsh Editing Workbench
+# Zsh Editing Workbench [![Gitter][gitter-image]][gitter-link]
 
 Also check out [![ZNT](http://imageshack.com/a/img910/3618/oDHnuR.png) Zsh Navigation Tools](https://github.com/psprint/zsh-navigation-tools)
 and [![ZCA](http://imageshack.com/a/img911/8084/qSpO8a.png) Zsh Command Architect](https://github.com/psprint/zsh-cmd-architect)
@@ -57,14 +55,6 @@ operations (e.g. incremental history word completion).
 
 ![zew refcard](http://imageshack.com/a/img922/1959/4gXU1R.png)
 
-## IRC Channel
-
-Channel `#zplugin@freenode` is a support place for all author's projects. Connect to:
-[chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin)
- and join #zplugin.
-
-Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
-
 # Configuring terminals
 
 **XTerm**
@@ -75,3 +65,5 @@ To make `Alt` key work like expected under `XTerm` add `XTerm*metaSendsEscape: t
 echo 'XTerm*metaSendsEscape: true' >> ~/.Xresources
 ```
 
+[gitter-image]: https://badges.gitter.im/zdharma-continuum/community.svg
+[gitter-link]: https://gitter.im/zdharma-continuum/community
